@@ -1,0 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Playfair+Display:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+/* botoes */
+@import url(./utilitarios/botoes/botoes.css);
+
+body {
+  background-color: rgb(208, 208, 209);
+  font-family: "IBM Plex Mono", monospace;
+  display: grid;
+  place-items: center;
+  height: 97vh;
+}
+
+img {
+  width: 25px;
+}
+
+.lista-itens-container {
+  text-align: center;
+  background-color: rgb(250, 249, 249);
+  padding: 2.5rem;
+  border-radius: 5px;
+  box-shadow: 2px 2px 4px rgb(168, 168, 168);
+}
+
+/* container de entrada de dados */
+
+.lista-itens-infos {
+  display: flex;
+  gap: 5px;
+}
+
+.lista-itens-infos input:first-child {
+  border: 2px solid white;
+  background-color: rgb(181, 183, 183);
+  border-radius: 5px;
+  outline: none;
+  padding: 5px;
+  width: 100%;
+}
+
+/* editar itens */
+
+.item-container {
+  width: 100%;
+  display: grid;
+  align-items: center;
+  gap: 5px;
+  margin-top: 0.5rem;
+  margin-bottom: 10px;
+}
+
+.item-container button {
+  background-color: rgba(255, 255, 255, 0);
+  border: none;
+  cursor: pointer;
+}
+
+.item-list {
+  padding: 2px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item-list:hover {
+  background-color: rgb(187, 190, 190);
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.limpar-btn {
+  background-color: brown;
+}
