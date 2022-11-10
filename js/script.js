@@ -6,14 +6,19 @@ adicionar.addEventListener("click", adicionarItem);
 
 let infoAtual;
 let editFlag = false;
+let editId = ""
 
 function adicionarItem(e) {
+  const id = new Date().getTime().toString();
   e.preventDefault();
   //Guarda dados do input
   const valor = info.value;
   //Funcao para verificar se o input esta vazio e o editFlag verdadeiro
   if (valor !== "" && !editFlag) {
     const div = document.createElement("div");
+    let attr = document.createAttribute("data-id");
+    attr.value = id;
+    div.setAttributeNode(attr);
     div.innerHTML = `<article class="item-list">
         <p class="item-value">${valor}</p>
         <div class="item-buttons">
@@ -23,7 +28,7 @@ function adicionarItem(e) {
           </article>`;
 
     article.appendChild(div);
-    salvarValores(info.value)
+    salvarValores(id,valor)
     valoresPadrão();
     //Botao de excluir um item
     const botaoRemover = document.querySelectorAll(".excluir");
@@ -36,9 +41,11 @@ function adicionarItem(e) {
     botaoExcluirTodosItens.addEventListener('click', excluirTodosOsItens)
 
   } else if (valor !== "" && editFlag === true) {
+    const itemClicado = e.currentTarget.parentElement.parentElement.parentElement.querySelector('.item-value').innerText
     //Altera a informação do item
     infoAtual.innerHTML = valor;
     //Retorna para os valores padrao
+    editarCookie(editId,valor)
     valoresPadrão();
   }
 }
@@ -53,8 +60,9 @@ function valoresPadrão() {
 //Função de remover Itens
 function remover(e) {
   const element = e.currentTarget.parentElement.parentElement.parentElement;
+  const id = element.dataset.id
   element.remove();
-  excluirCookie(element)
+  excluirCookie(id)
 }
 
 //Função de Editar Itens
@@ -66,6 +74,7 @@ function editar(e) {
   info.value = infoAtual.innerHTML;
   //Muda o nome do botao adicionar
   adicionar.value = "Editar";
+  editId = e.currentTarget.parentElement.parentElement.parentElement.dataset.id;
 }
 
 //Função de excluir todos os itens
@@ -81,8 +90,8 @@ function excluirTodosOsItens() {
 // ----- Local Storage ------
 
 //Salvar cookie
-function salvarValores(value){
-  const listItens = {value}
+function salvarValores(id, value){
+  const listItens = {id,value}
   let teste = pegarCookie()
   teste.push(listItens)
   localStorage.setItem("lista", JSON.stringify(teste))
@@ -96,17 +105,29 @@ function pegarCookie(){
 }
 
 //Exluir cookie
-function excluirCookie(element){
+function excluirCookie(id){
   //Item clicado
-  const itemClicado = element.querySelector('p').innerText
-  const itens = pegarCookie()
+  let itens = pegarCookie()
   const teste = itens.filter(function (item){
-    if(item.value !== itemClicado){
+    if(item.id !== id){
       return item
     }
   })
-  console.log(teste)
-
-  
+    
   localStorage.setItem("lista", JSON.stringify(teste))
 }
+
+//Editar cookie
+function editarCookie(id,value){
+  console.log(value)
+  let itens = pegarCookie()
+  itens = itens.map(function (item){
+    if(item.id === id){
+      return item.value = value
+    }
+    return item
+  })
+    
+  console.log(itens)
+}
+
