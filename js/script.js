@@ -23,6 +23,7 @@ function adicionarItem(e) {
           </article>`;
 
     article.appendChild(div);
+    salvarValores(info.value)
     valoresPadrão();
     //Botao de excluir um item
     const botaoRemover = document.querySelectorAll(".excluir");
@@ -53,6 +54,7 @@ function valoresPadrão() {
 function remover(e) {
   const element = e.currentTarget.parentElement.parentElement.parentElement;
   element.remove();
+  excluirCookie(element)
 }
 
 //Função de Editar Itens
@@ -73,4 +75,38 @@ function excluirTodosOsItens() {
   //Seleciona todos os itens e remove
   todosOsItens.querySelectorAll('div').forEach((item) => item.remove())
   valoresPadrão();
+}
+
+
+// ----- Local Storage ------
+
+//Salvar cookie
+function salvarValores(value){
+  const listItens = {value}
+  let teste = pegarCookie()
+  teste.push(listItens)
+  localStorage.setItem("lista", JSON.stringify(teste))
+}
+
+//Retornar o cookie salvo
+function pegarCookie(){
+  return localStorage.getItem("lista")
+  ? JSON.parse(localStorage.getItem("lista"))
+  : []
+}
+
+//Exluir cookie
+function excluirCookie(element){
+  //Item clicado
+  const itemClicado = element.querySelector('p').innerText
+  const itens = pegarCookie()
+  const teste = itens.filter(function (item){
+    if(item.value !== itemClicado){
+      return item
+    }
+  })
+  console.log(teste)
+
+  
+  localStorage.setItem("lista", JSON.stringify(teste))
 }
