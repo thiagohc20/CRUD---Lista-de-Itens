@@ -1,0 +1,41 @@
+.erro{
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgb(240, 66, 66);
+
+    color: aliceblue;
+    font-weight: 700;
+    box-shadow: 2px 2px 2px #888888;
+}
+
+.sucesso{
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgb(66, 240, 66);
+
+    color: aliceblue;
+    font-weight: 700;
+    box-shadow: 2px 2px 2px #888888;
+}
+
+.msgErroCampoVazio{
+    display: none;
+}
+
+.msgErroEditar{
+    display: none;
+}
+
+.msgSucessoEditar{
+    display: none;
+}
+
+.msgSucessoAdd{
+    display: none;
+}
+
+/* tratamento de erro */
+
+.msg-sucesso-ativo{
+    display: block;
+}

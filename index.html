@@ -10,7 +10,26 @@
   <body>
     <section class="lista-itens-container">
       <form class="lista-itens-form">
-        <p class="alert"></p>
+        <div class="erro msgErroCampoVazio">
+          <p>ERRO!</p>
+          <p>Campo "Adicione seu item" está vazio!</p>
+        </div>
+        <div class="erro msgErroEditar">
+          <p>ERRO!</p>
+          <p>Edite o item para depois excluir</p>
+        </div>
+        <div class="sucesso msgSucessoAdd">
+          <p>Sucesso!</p>
+          <p>Seu foi item adicionado a lista</p>
+        </div>
+        <div class="sucesso msgSucessoEditar">
+          <p>Sucesso!</p>
+          <p>Seu item foi alterado</p>
+        </div>
+        <div class="sucesso msgSucessoExcluir">
+          <p>Sucesso!</p>
+          <p>Seu item foi excluido</p>
+        </div>
         <h1>Lista de Itens</h1>
         <div class="lista-itens-infos">
           <input type="text" name="" id="" class="input-item" placeholder="Adicione seu item" />

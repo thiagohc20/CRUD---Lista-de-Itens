@@ -32,6 +32,7 @@ function adicionarItem(e) {
 
     article.appendChild(div);
     salvarValores(id,valor)
+    msgSucessoAdd()
     valoresPadrão();
     //Botao de excluir um item
     const botaoRemover = document.querySelectorAll(".excluir");
@@ -49,8 +50,46 @@ function adicionarItem(e) {
     infoAtual.innerHTML = valor;
     //Retorna para os valores padrao
     editarCookie(editId,valor)
+    msgSucessoEditar()
     valoresPadrão();
   }
+}
+//Tratamento de erro
+
+//Mensagem de sucesso ao adicionar
+function msgSucessoAdd(){
+  const msg = document.querySelector('.msgSucessoAdd')
+  msg.classList.add('msg-sucesso-ativo')
+  setTimeout(() => {
+    msg.classList.remove('msg-sucesso-ativo')
+  }, 2000);
+}
+
+//Mensagem de sucesso ao editar
+function msgSucessoEditar(){
+  const msg = document.querySelector('.msgSucessoEditar')
+  msg.classList.add('msg-sucesso-ativo')
+  setTimeout(() => {
+    msg.classList.remove('msg-sucesso-ativo')
+  }, 2000);
+}
+
+//Mensagem de erro ao editar
+function msgErroEditar(){
+  const msg = document.querySelector('.msgErroEditar')
+  msg.classList.add('msg-sucesso-ativo')
+  setTimeout(() => {
+    msg.classList.remove('msg-sucesso-ativo')
+  }, 2000);
+}
+
+//Mensagem de erro campo vazio
+function msgErroCampoVazio(){
+  const msg = document.querySelector('.msgErroCampoVazio')
+  msg.classList.add('msg-sucesso-ativo')
+  setTimeout(() => {
+    msg.classList.remove('msg-sucesso-ativo')
+  }, 2000);
 }
 
 //Define os valores padrao
@@ -63,7 +102,7 @@ function valoresPadrão() {
 //Função de remover Itens
 function remover(e) {
   if(editFlag === true){
-   console.log('Termine a edição')
+    msgErroEditar()
   }else{
     const element = e.currentTarget.parentElement.parentElement.parentElement;
     const id = element.dataset.id
@@ -101,9 +140,9 @@ function excluirTodosOsItens() {
 //Salvar cookie
 function salvarValores(id, value){
   const listItens = {id,value}
-  let teste = pegarCookie()
-  teste.push(listItens)
-  localStorage.setItem("lista", JSON.stringify(teste))
+  let itens = pegarCookie()
+  itens.push(listItens)
+  localStorage.setItem("lista", JSON.stringify(itens))
 }
 
 //Retornar o cookie salvo
@@ -115,7 +154,6 @@ function pegarCookie(){
 
 //Exluir cookie
 function excluirCookie(id){
-  //Item clicado
   let itens = pegarCookie()
    itens = itens.filter(function (item){
     if(item.id !== id){
@@ -141,8 +179,6 @@ function editarCookie(id,value){
 // ----- Inicialização ------
 
 //Carrega os itens salvos no local storage
-
-
 function carregarItens(){
   let itens = pegarCookie()
   if(itens.length > 0){
@@ -159,15 +195,15 @@ function carregarItens(){
             </div>
             </article>`;
 
-            const botaoRemover = document.querySelectorAll(".excluir");
-            botaoRemover.forEach((item) => item.addEventListener("click", remover));
-            //Botao de editar
-            const botaoEditar = document.querySelectorAll(".editar");
-            botaoEditar.forEach((item) => item.addEventListener("click", editar));
-
-            //adicionar o item ao container
-            article.appendChild(div);
-  })
+      //Botao de excluir um item      
+      const botaoRemover = document.querySelectorAll(".excluir");
+      botaoRemover.forEach((item) => item.addEventListener("click", remover));
+      //Botao de editar
+      const botaoEditar = document.querySelectorAll(".editar");
+      botaoEditar.forEach((item) => item.addEventListener("click", editar));
+      //Adicionar o item ao container
+      article.appendChild(div);
+    })
   }
 }
 
