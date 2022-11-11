@@ -4,9 +4,12 @@ const info = document.querySelector(".input-item");
 
 adicionar.addEventListener("click", adicionarItem);
 
+window.addEventListener('DOMContentLoaded', carregarItens);
+
 let infoAtual;
 let editFlag = false;
 let editId = ""
+
 
 function adicionarItem(e) {
   const id = new Date().getTime().toString();
@@ -59,10 +62,14 @@ function valoresPadrão() {
 
 //Função de remover Itens
 function remover(e) {
-  const element = e.currentTarget.parentElement.parentElement.parentElement;
-  const id = element.dataset.id
-  element.remove();
-  excluirCookie(id)
+  if(editFlag === true){
+   console.log('Termine a edição')
+  }else{
+    const element = e.currentTarget.parentElement.parentElement.parentElement;
+    const id = element.dataset.id
+    element.remove();
+    excluirCookie(id)
+  }
 }
 
 //Função de Editar Itens
@@ -83,6 +90,8 @@ function excluirTodosOsItens() {
   const todosOsItens = document.querySelector('.item-container')
   //Seleciona todos os itens e remove
   todosOsItens.querySelectorAll('div').forEach((item) => item.remove())
+  // Exclui todos os cookies
+  localStorage.removeItem("lista")
   valoresPadrão();
 }
 
@@ -108,26 +117,60 @@ function pegarCookie(){
 function excluirCookie(id){
   //Item clicado
   let itens = pegarCookie()
-  const teste = itens.filter(function (item){
+   itens = itens.filter(function (item){
     if(item.id !== id){
       return item
     }
   })
-    
-  localStorage.setItem("lista", JSON.stringify(teste))
+  localStorage.setItem("lista", JSON.stringify(itens))
 }
 
 //Editar cookie
 function editarCookie(id,value){
-  console.log(value)
   let itens = pegarCookie()
-  itens = itens.map(function (item){
+  itens = itens = itens.map(function (item){
     if(item.id === id){
-      return item.value = value
+      item.value = value
     }
     return item
   })
-    
-  console.log(itens)
+  localStorage.setItem("lista", JSON.stringify(itens))
 }
+
+
+// ----- Inicialização ------
+
+//Carrega os itens salvos no local storage
+
+
+function carregarItens(){
+  let itens = pegarCookie()
+  if(itens.length > 0){
+    itens.forEach(function(item){
+      const div = document.createElement("div");
+      let attr = document.createAttribute("data-id");
+      attr.value = item.id;
+      div.setAttributeNode(attr);
+      div.innerHTML = `<article class="item-list">
+          <p class="item-value">${item.value}</p>
+          <div class="item-buttons">
+              <button type="button" class="editar"><img src="./assets/editar.png" alt="" srcset=""></button>
+              <button type="button" class="excluir"><img src="./assets/excluir.png" alt="" srcset=""></button>
+            </div>
+            </article>`;
+
+            const botaoRemover = document.querySelectorAll(".excluir");
+            botaoRemover.forEach((item) => item.addEventListener("click", remover));
+            //Botao de editar
+            const botaoEditar = document.querySelectorAll(".editar");
+            botaoEditar.forEach((item) => item.addEventListener("click", editar));
+
+            //adicionar o item ao container
+            article.appendChild(div);
+  })
+  }
+}
+
+
+
 
