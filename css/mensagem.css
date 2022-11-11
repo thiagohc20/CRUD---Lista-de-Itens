@@ -34,6 +34,14 @@
     display: none;
 }
 
+.msgSucessoExcluir{
+    display: none;
+}
+
+.msgSucessoExcluirTudo{
+    display: none;
+}
+
 /* tratamento de erro */
 
 .msg-sucesso-ativo{

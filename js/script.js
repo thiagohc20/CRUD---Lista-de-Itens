@@ -55,6 +55,23 @@ function adicionarItem(e) {
   }
 }
 //Tratamento de erro
+//Mensagem sucesso ao excluir
+function msgSucessoExcluir(){
+  const msg = document.querySelector('.msgSucessoExcluir')
+  msg.classList.add('msg-sucesso-ativo')
+  setTimeout(() => {
+    msg.classList.remove('msg-sucesso-ativo')
+  }, 2000);
+}
+
+//Mensagem sucesso ao excluir todos os itens
+function msgSucessoExcluirTodosOsItens(){
+  const msg = document.querySelector('.msgSucessoExcluirTudo')
+  msg.classList.add('msg-sucesso-ativo')
+  setTimeout(() => {
+    msg.classList.remove('msg-sucesso-ativo')
+  }, 2000);
+}
 
 //Mensagem de sucesso ao adicionar
 function msgSucessoAdd(){
@@ -92,6 +109,8 @@ function msgErroCampoVazio(){
   }, 2000);
 }
 
+
+
 //Define os valores padrao
 function valoresPadrão() {
   info.value = "";
@@ -107,6 +126,7 @@ function remover(e) {
     const element = e.currentTarget.parentElement.parentElement.parentElement;
     const id = element.dataset.id
     element.remove();
+    msgSucessoExcluir()
     excluirCookie(id)
   }
 }
@@ -131,6 +151,7 @@ function excluirTodosOsItens() {
   todosOsItens.querySelectorAll('div').forEach((item) => item.remove())
   // Exclui todos os cookies
   localStorage.removeItem("lista")
+  msgSucessoExcluirTodosOsItens()
   valoresPadrão();
 }
 
