@@ -1,57 +1,54 @@
-const adicionar = document.querySelector(".adicionar");
 const article = document.querySelector(".item-container");
+const add = document.querySelector(".add");
 const info = document.querySelector(".input-item");
+const cleanAllItens = document.querySelector(".clean-btn");
 
-adicionar.addEventListener("click", adicionarItem);
-
-window.addEventListener('DOMContentLoaded', carregarItens);
-
-let infoAtual;
+add.addEventListener("click", addItem);
+window.addEventListener("DOMContentLoaded", loadItens);
+cleanAllItens.addEventListener("click", deleteAllItens);
+//Editar item
+let currentInfo;
 let editFlag = false;
 let editId = ""
 
 
-function adicionarItem(e) {
+function addItem(e) {
   const id = new Date().getTime().toString();
   e.preventDefault();
   //Guarda dados do input
-  const valor = info.value;
+  const value = info.value;
   //Funcao para verificar se o input esta vazio e o editFlag verdadeiro
-  if (valor !== "" && !editFlag) {
+  if (value !== "" && !editFlag) {
     const div = document.createElement("div");
     let attr = document.createAttribute("data-id");
     attr.value = id;
     div.setAttributeNode(attr);
     div.innerHTML = `<article class="item-list">
-        <p class="item-value">${valor}</p>
+        <p class="item-value">${value}</p>
         <div class="item-buttons">
-            <button type="button" class="editar"><img src="./assets/editar.png" alt="" srcset=""></button>
-            <button type="button" class="excluir"><img src="./assets/excluir.png" alt="" srcset=""></button>
+            <button type="button" class="edit"><img src="./assets/editar.png" alt="" srcset=""></button>
+            <button type="button" class="delete"><img src="./assets/excluir.png" alt="" srcset=""></button>
           </div>
           </article>`;
 
-    article.appendChild(div);
-    salvarValores(id,valor)
-    msgSucessoAdd()
-    valoresPadrão();
-    //Botao de excluir um item
-    const botaoRemover = document.querySelectorAll(".excluir");
-    botaoRemover.forEach((item) => item.addEventListener("click", remover));
-    //Botao de editar
-    const botaoEditar = document.querySelectorAll(".editar");
-    botaoEditar.forEach((item) => item.addEventListener("click", editar));
-    //Botao excluir todos os itens
-    const botaoExcluirTodosItens = document.querySelector(".limpar-btn")
-    botaoExcluirTodosItens.addEventListener('click', excluirTodosOsItens)
-
-  } else if (valor !== "" && editFlag === true) {
-    const itemClicado = e.currentTarget.parentElement.parentElement.parentElement.querySelector('.item-value').innerText
+          saveValues(id,value)
+          removeAllItens()
+          successMsgAdd()
+          defaultValues();
+          //Botao de excluir um item
+          const removeButton = div.querySelector(".delete");
+          removeButton.addEventListener("click", remover)
+          //Botao de editar
+          const editButton =  div.querySelector(".edit");
+          editButton.addEventListener("click", edit)    
+          article.appendChild(div);
+  } else if (value !== "" && editFlag === true) {
     //Altera a informação do item
-    infoAtual.innerHTML = valor;
+    currentInfo.innerHTML = value;
     //Retorna para os valores padrao
-    editarCookie(editId,valor)
-    msgSucessoEditar()
-    valoresPadrão();
+    editCookie(editId,value)
+    successEditMsg()
+    defaultValues();
   }
 }
 //Tratamento de erro
@@ -65,7 +62,7 @@ function msgSucessoExcluir(){
 }
 
 //Mensagem sucesso ao excluir todos os itens
-function msgSucessoExcluirTodosOsItens(){
+function msgSucessodeleteAllItens(){
   const msg = document.querySelector('.msgSucessoExcluirTudo')
   msg.classList.add('msg-sucesso-ativo')
   setTimeout(() => {
@@ -73,9 +70,9 @@ function msgSucessoExcluirTodosOsItens(){
   }, 2000);
 }
 
-//Mensagem de sucesso ao adicionar
-function msgSucessoAdd(){
-  const msg = document.querySelector('.msgSucessoAdd')
+//Mensagem de sucesso ao add
+function successMsgAdd(){
+  const msg = document.querySelector('.successMsgAdd')
   msg.classList.add('msg-sucesso-ativo')
   setTimeout(() => {
     msg.classList.remove('msg-sucesso-ativo')
@@ -83,8 +80,8 @@ function msgSucessoAdd(){
 }
 
 //Mensagem de sucesso ao editar
-function msgSucessoEditar(){
-  const msg = document.querySelector('.msgSucessoEditar')
+function successEditMsg(){
+  const msg = document.querySelector('.successEditMsg')
   msg.classList.add('msg-sucesso-ativo')
   setTimeout(() => {
     msg.classList.remove('msg-sucesso-ativo')
@@ -109,13 +106,19 @@ function msgErroCampoVazio(){
   }, 2000);
 }
 
-
+//Funcao de excluir todos os itens
+function removeAllItens(){
+  cleanAllItens.classList.add('clean-btn-ativo')
+  if(article.childElementCount === 0){
+    cleanAllItens.classList.remove('clean-btn-ativo')
+  }
+}
 
 //Define os valores padrao
-function valoresPadrão() {
+function defaultValues() {
   info.value = "";
   editFlag = false;
-  adicionar.value = "Adicionar";
+  add.value = "adicionar";
 }
 
 //Função de remover Itens
@@ -128,38 +131,44 @@ function remover(e) {
     element.remove();
     msgSucessoExcluir()
     excluirCookie(id)
+    removeAllItens()
   }
 }
 
 //Função de Editar Itens
-function editar(e) {
-  infoAtual = e.currentTarget.parentElement.parentElement.querySelector("p");
+function edit(e) {
+  currentInfo = e.currentTarget.parentElement.parentElement.querySelector("p");
   //Define true para ser editado
   editFlag = true;
   //Altera o input de "adicione" para a informação atual do texto
-  info.value = infoAtual.innerHTML;
-  //Muda o nome do botao adicionar
-  adicionar.value = "Editar";
+  info.value = currentInfo.innerHTML;
+  //Muda o nome do botao add
+  add.value = "Editar";
   editId = e.currentTarget.parentElement.parentElement.parentElement.dataset.id;
 }
 
 //Função de excluir todos os itens
-function excluirTodosOsItens() {
+function deleteAllItens() {
+  if(editFlag === true){
+    msgErroEditar()
+  }else{
   //Guarda todo conteudo de item container
   const todosOsItens = document.querySelector('.item-container')
   //Seleciona todos os itens e remove
   todosOsItens.querySelectorAll('div').forEach((item) => item.remove())
   // Exclui todos os cookies
   localStorage.removeItem("lista")
-  msgSucessoExcluirTodosOsItens()
-  valoresPadrão();
+  msgSucessodeleteAllItens()
+  defaultValues();
+  removeAllItens()
+  }
 }
 
 
 // ----- Local Storage ------
 
 //Salvar cookie
-function salvarValores(id, value){
+function saveValues(id, value){
   const listItens = {id,value}
   let itens = pegarCookie()
   itens.push(listItens)
@@ -185,7 +194,7 @@ function excluirCookie(id){
 }
 
 //Editar cookie
-function editarCookie(id,value){
+function editCookie(id,value){
   let itens = pegarCookie()
   itens = itens = itens.map(function (item){
     if(item.id === id){
@@ -200,33 +209,40 @@ function editarCookie(id,value){
 // ----- Inicialização ------
 
 //Carrega os itens salvos no local storage
-function carregarItens(){
-  let itens = pegarCookie()
-  if(itens.length > 0){
-    itens.forEach(function(item){
-      const div = document.createElement("div");
-      let attr = document.createAttribute("data-id");
-      attr.value = item.id;
-      div.setAttributeNode(attr);
-      div.innerHTML = `<article class="item-list">
-          <p class="item-value">${item.value}</p>
-          <div class="item-buttons">
-              <button type="button" class="editar"><img src="./assets/editar.png" alt="" srcset=""></button>
-              <button type="button" class="excluir"><img src="./assets/excluir.png" alt="" srcset=""></button>
-            </div>
-            </article>`;
+function loadItens() {
+  let items = pegarCookie();
 
-      //Botao de excluir um item      
-      const botaoRemover = document.querySelectorAll(".excluir");
-      botaoRemover.forEach((item) => item.addEventListener("click", remover));
-      //Botao de editar
-      const botaoEditar = document.querySelectorAll(".editar");
-      botaoEditar.forEach((item) => item.addEventListener("click", editar));
-      //Adicionar o item ao container
-      article.appendChild(div);
-    })
+  if (items.length > 0) {
+    items.forEach((item) => {
+      criarItens(item.id, item.value)
+    });
+    cleanAllItens.classList.add('clean-btn-ativo')
   }
+  removeAllItens()
 }
+
+function criarItens(id,value){
+  const element = document.createElement("div");
+  const attr = document.createAttribute("data-id");
+  attr.value = id;
+  element.setAttributeNode(attr);
+  element.innerHTML = `<article class="item-list">
+  <p class="item-value">${value}</p>
+  <div class="item-buttons">
+      <button type="button" class="edit"><img src="./assets/editar.png" alt="" srcset=""></button>
+      <button type="button" class="delete"><img src="./assets/excluir.png" alt="" srcset=""></button>
+    </div>
+    </article>`
+    //Botao de remover
+    const removeButton = element.querySelector(".delete");
+    removeButton.addEventListener("click", remover);
+    //Botao de editar
+    const editButton = element.querySelector(".edit");
+    editButton.addEventListener("click", edit);
+    article.appendChild(element) 
+    console.log(element)
+}
+
 
 
 

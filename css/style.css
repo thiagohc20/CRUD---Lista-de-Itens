@@ -15,6 +15,7 @@ body {
   display: grid;
   place-items: center;
   height: 97vh;
+  user-select: none;
 }
 
 img {
@@ -23,6 +24,8 @@ img {
 
 .lista-itens-container {
   min-width: 320px;
+  max-width: 500px;
+  width: 100%;
   text-align: center;
   background-color: rgb(250, 249, 249);
   padding: 2.5rem;
@@ -77,6 +80,14 @@ img {
   transition: 0.3s;
 }
 
-.limpar-btn {
+.clean-btn {
   background-color: brown;
+  display: none;
+  transition: 0.3s;
+}
+
+/* Botao de limpar tudo */
+.clean-btn-ativo{
+  display: initial;
+  transition: 0.3s;
 }
